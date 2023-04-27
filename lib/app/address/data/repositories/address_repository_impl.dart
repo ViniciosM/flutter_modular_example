@@ -6,7 +6,7 @@ import '../../domain/repositories/address_repository.dart';
 
 class AddressRepositoryImpl implements AddressRepository {
   @override
-  Future<Result<AddressEntity>> getAddress({required String cep}) {
+  Future<Result<AddressEntity>> getAddress({required String cep}) async {
     // TODO: implement getAddress
     throw UnimplementedError();
   }
