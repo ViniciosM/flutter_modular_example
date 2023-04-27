@@ -12,9 +12,9 @@ class SplashPage extends StatelessWidget {
       ),
       body: Center(
         child: TextButton(
-          child: const Text("Category Page"),
+          child: const Text("Address Page"),
           onPressed: () {
-            Modular.to.pushNamed('/category');
+            Modular.to.pushNamed('/address');
           },
         ),
       ),

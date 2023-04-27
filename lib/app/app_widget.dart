@@ -8,7 +8,7 @@ class AppWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Modular Example',
+      title: 'Flutter Modular Example With Clean Architecture',
       theme: ThemeData(primarySwatch: Colors.indigo),
       routeInformationParser: Modular.routeInformationParser,
       routerDelegate: Modular.routerDelegate,
