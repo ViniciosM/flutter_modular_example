@@ -1,2 +1,5 @@
-# flutter_modular_example
-A simple project to demonstrate how can we use flutter modular
+# Modelo de Arquitetura com Modular
+
+### Intro
+    Project to show how we can use Clean Architecture and Flutter Modular.
+
