@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_modular_example/app/address/address_module.dart';
 import 'package:flutter_modular_example/app/address/data/datasources/address_datasource.dart';
@@ -16,18 +17,22 @@ class AppModule extends Module {
         // HTTP
         Bind.singleton((i) => http.Client()),
 
-        // Blocs
-        Bind.singleton<AddressBloc>((i) => AddressBloc(i())),
+        // Dio
+        Bind.singleton((i) => Dio()),
 
         // Datasources
-        Bind.factory<AddressDatasource>((i) => AddressDatasourceImpl()),
+        Bind.factory((i) => AddressDatasourceImpl(i())),
 
         // Repositories
-        Bind.factory<AddressRepository>((i) => AddressRepositoryImpl()),
+        Bind.factory<AddressRepository>(
+            (i) => AddressRepositoryImpl(addressDatasource: i())),
 
         // Usecases
         Bind.factory<GetAddressUsecase>(
             (i) => GetAddressUsecaseImpl(addressRepository: i())),
+
+        // Blocs
+        Bind.singleton<AddressBloc>((i) => AddressBloc(i())),
       ];
 
   @override

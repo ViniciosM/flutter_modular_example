@@ -7,6 +7,7 @@ class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.indigo.shade100,
       appBar: AppBar(
         title: const Text("Splash"),
       ),

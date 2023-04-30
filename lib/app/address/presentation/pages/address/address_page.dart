@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_modular_example/app/address/domain/entities/address_entity.dart';
 import 'package:flutter_modular_example/app/address/presentation/pages/address/controller/address_bloc.dart';
 import 'package:flutter_modular_example/core/shared/base_state.dart';
+import 'package:validatorless/validatorless.dart';
 
 class AddressPage extends StatefulWidget {
   const AddressPage({super.key});
@@ -20,12 +20,20 @@ class _AddressPageState extends State<AddressPage> {
   @override
   void initState() {
     _cepEC = TextEditingController();
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _cepEC.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.indigo[100],
         appBar: AppBar(
           title: const Text('Address Page'),
         ),
@@ -44,11 +52,19 @@ class _AddressPageState extends State<AddressPage> {
                         height: 50,
                       ),
                       TextFormField(
-                        controller: _cepEC,
-                        decoration: const InputDecoration(
-                          label: Text('CEP'),
-                        ),
-                      ),
+                          controller: _cepEC,
+                          decoration: InputDecoration(
+                            label: const Text('CEP'),
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.close_outlined),
+                              onPressed: () {
+                                _cepEC.clear();
+                              },
+                            ),
+                          ),
+                          validator: Validatorless.multiple([
+                            Validatorless.required('Informe o CEP'),
+                          ])),
                       const SizedBox(
                         height: 20,
                       ),
@@ -58,7 +74,7 @@ class _AddressPageState extends State<AddressPage> {
                           final formValid =
                               _formKey.currentState?.validate() ?? false;
                           if (formValid) {
-                            await _addressBloc.getAddress(_cepEC.text);
+                            _addressBloc.getAddress(_cepEC.text);
                           }
                         },
                       ),
@@ -68,16 +84,18 @@ class _AddressPageState extends State<AddressPage> {
                     ],
                   ),
                 ),
-                BlocBuilder(
+                BlocBuilder<AddressBloc, BaseState>(
                     bloc: _addressBloc,
                     builder: (context, state) {
                       if (state is LoadingState) {
                         return const Center(
                           child: CircularProgressIndicator(),
                         );
-                      } else if (state is SuccessState<AddressEntity>) {
+                      }
+                      if (state is SuccessState) {
                         final address = state.data;
                         return Container(
+                          color: Colors.indigo.shade300,
                           padding: const EdgeInsets.all(25),
                           margin: const EdgeInsets.all(25),
                           child: Column(
@@ -90,31 +108,30 @@ class _AddressPageState extends State<AddressPage> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              Text('Logradouro: ${address.complemento}'),
+                              Text('Complemento: ${address.complemento}'),
                               const SizedBox(
                                 height: 10,
                               ),
-                              Text('Logradouro: ${address.bairro}'),
+                              Text('Bairro: ${address.bairro}'),
                               const SizedBox(
                                 height: 10,
                               ),
-                              Text('Logradouro: ${address.localidade}'),
+                              Text('Localidade: ${address.localidade}'),
                               const SizedBox(
                                 height: 10,
                               ),
-                              Text('Logradouro: ${address.uf}'),
+                              Text('UF: ${address.uf}'),
                               const SizedBox(
                                 height: 10,
                               ),
                             ],
                           ),
                         );
-                      } else if (state is ErrorState) {
+                      }
+                      if (state is ErrorState) {
                         return const Center(
                           child: Text('Ocorreu um erro inesperado'),
                         );
-                      } else if (state is EmptyState) {
-                        return const SizedBox.shrink();
                       }
                       return const SizedBox.shrink();
                     }),
